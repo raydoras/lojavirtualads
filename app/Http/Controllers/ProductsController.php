@@ -22,7 +22,8 @@ class ProductsController extends Controller
         $request->validate([
             'name' => 'required|min:2|max:50',
             'quantity' => 'required|gt:0',
-            'price' => 'required|gt:0'
+            'price' => 'required|gt:0',
+            'type_id' => 'required|exists:types,id'
         ]);
 
         //dd($request->all());
@@ -56,6 +57,13 @@ class ProductsController extends Controller
     }
     public function update(Request $request)
     {
+        $request->validate([
+            'name' => 'required|min:2|max:50',
+            'quantity' => 'required|gt:0',
+            'price' => 'required|gt:0',
+            'type_id' => 'required|exists:types,id'
+        ]);
+
         $product = Product::find($request->id);
         //método update faz um update product set name = ? etc...
         $product->update([
