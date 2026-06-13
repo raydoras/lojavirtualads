@@ -20,7 +20,11 @@
                         :active="request()->is('products*')">
                         {{ __('Produtos') }}
                     </x-nav-link>
-                    
+
+                    <x-nav-link :href="route('suppliers.index')" :active="request()->routeIs('suppliers.index')">
+                        {{ __('Fornecedores') }}
+                    </x-nav-link>
+
                 </div>
             </div>
 

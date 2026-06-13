@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SupplierController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -26,6 +27,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/products/update/', [ProductsController::class, 'update']);
 
     Route::get('/products/delete/{id}', [ProductsController::class, 'destroy']);
+
+    Route::get('/suppliers', [SupplierController::class, 'index'])->name('suppliers.index');
+    Route::get('/suppliers/new', [SupplierController::class, 'create'])->name('suppliers.create');
+    
+    Route::post('/suppliers/new', [SupplierController::class, 'store'])->name('suppliers.store');
+
 });
 
 require __DIR__ . '/auth.php';
