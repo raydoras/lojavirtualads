@@ -10,7 +10,7 @@ class Product extends Model
     //
     use HasFactory;
 
-    protected $fillable = ["name", "description", "price", "quantity", "type_id"];
+    protected $fillable = ["name", "description", "price", "quantity", "type_id", "image"];
 
     public function type() {
         return $this->belongsTo(Type::class);

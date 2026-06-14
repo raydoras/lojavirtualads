@@ -1,7 +1,6 @@
 <x-app-layout>
 
-    <form class="w-full max-w-md mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow" action="{{ url('products/new') }}" method="POST">
-        @csrf
+    <form class="w-full max-w-md mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow" action="{{ url('products/new') }}" method="POST" enctype="multipart/form-data"> @csrf
 
         <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Cadastrar Produto</h1>
 
@@ -34,6 +33,11 @@
             @endforeach
 
         </select>
+
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Imagem do Produto:</label>
+            <input type="file" name="image" class="w-full border border-gray-300 rounded p-2 focus:outline-none focus:border-blue-500">
+        </div>
 
         <input class="w-full p-2 rounded bg-blue-600 text-white" type="submit" value="Salvar" />
     </form>

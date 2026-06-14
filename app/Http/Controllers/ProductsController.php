@@ -7,36 +7,49 @@ use App\Models\Type;
 use Illuminate\Http\Request;
 
 class ProductsController extends Controller
-{
-    //
-    public function create()
+
+      // função que irá mostrar a view de cadastro
+{   
+   public function create()
     {
         return view('products.create', ['types' => Type::all()]);
     }
 
-    //função chamada no submit do form..
-    //será um POST com os dados
+    // função chamada no submit do form..
+    // será um POST com os dados
     public function store(Request $request)
     {
-        //alimenta a var $errors na view
+        // alimenta a var $errors na view
         $request->validate([
             'name' => 'required|min:2|max:50',
             'quantity' => 'required|gt:0',
             'price' => 'required|gt:0',
-            'type_id' => 'required|exists:types,id'
+            'type_id' => 'required|exists:types,id',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048' // Validação para aceitar imagens de até 2MB
         ]);
 
-        //dd($request->all());
-        //não esquecer import do Product model.
-        Product::create([
+        // Cria o array básico com os dados do texto
+        $productData = [
             'name' => $request->name,
             'description' => $request->description,
             'quantity' => $request->quantity,
             'price' => $request->price,
-            'type_id' => $request->type_id
-        ]);
-        //usaremos flash session messages
-        return redirect('/products')->with('success', 'Produto cadastrado!');
+            'type_id' => $request->type_id,
+            'image' => null // Padrão começa nulo se não enviarem foto
+        ];
+
+        // Se o usuário submeteu um arquivo de imagem válido
+        if ($request->hasFile('image')) {
+            // Salva o arquivo dentro de 'storage/app/public/products' e retorna o caminho gerado
+            $path = $request->file('image')->store('products', 'public');
+            $productData['image'] = $path;
+        }
+
+        // não esquecer import do Product model.
+        Product::create($productData);
+        
+        // usaremos flash session messages
+        return redirect('/products')->with('success', 'Produto cadastrado com sucesso!');
     }
 
     //função que irá mostrar a view de listagem

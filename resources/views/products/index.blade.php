@@ -14,6 +14,8 @@ rounded hover:bg-blue-700">Cadastrar</a>
 dark:border-gray-600">
             <thead>
                 <tr class="bg-gray-100 dark:bg-gray-700">
+                    <th class="px-4 py-2 text-left text-gray-700 dark:text-gray-300 
+border border-gray-300 dark:border-gray-600">Foto</th>
                     <th class="px-4 py-2 text-left text-gray-700 dark:text-gray-300
 border border-gray-300 dark:border-gray-600">Nome</th>
                     <th class="px-4 py-2 text-left text-gray-700 dark:text-gray-300
@@ -29,6 +31,16 @@ border border-gray-300 dark:border-gray-600">Ações</th>
             <tbody>
                 @foreach($products as $product)
                 <tr class="border-b border-gray-300 dark:border-gray-600">
+                    <td class="px-4 py-2">
+                        @if($product->image)
+                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-16 h-16 object-cover rounded">
+                        @else
+                        <div class="w-12 h-12 bg-gray-200 dark:bg-gray-600 flex items-center justify-center rounded">
+                            <span class="text-gray-500 dark:text-gray-400">Sem imagem</span>
+                        </div>
+                        @endif
+                    </td>
+
                     <td class="px-4 py-2 text-gray-900 dark:text-white">{{
 $product->name }}</td>
                     <td class="px-4 py-2 text-gray-900 dark:text-white">{{
