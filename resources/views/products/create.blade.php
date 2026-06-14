@@ -22,16 +22,19 @@
         <input class="w-full p-2 mb-4 rounded border dark:bg-gray-700 dark:text-white" name="price" type="number" />
 
         <label class="block mb-1 text-gray-700 dark:text-gray-300">Tipo do produto:</label>
-
-        <select class="w-full p-2 mb-4 rounded border dark:bg-gray-700 dark:text-white" name="type_id">
+        <select class="w-full p-2 mb-4 rounded border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white" name="type_id">
             <option value="">Selecione</option>
-
             @foreach($types as $type)
-            <option value="{{ $type->id }}">
-                {{ $type->name }}
-            </option>
+            <option value="{{ $type->id }}">{{ $type->name }}</option>
             @endforeach
+        </select>
 
+        <label class="block mb-1 text-gray-700 dark:text-gray-300">Fornecedor:</label>
+        <select name="supplier_id" class="w-full p-2 mb-4 rounded border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+            <option value="">Selecione um fornecedor (Opcional)</option>
+            @foreach($suppliers as $supplier)
+            <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+            @endforeach
         </select>
 
         <div class="mb-4">

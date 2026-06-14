@@ -10,8 +10,8 @@ rounded hover:bg-blue-700">Cadastrar</a>
 
         </div>
 
-        <table class="w-full table-auto border-collapse border border-gray-300
-dark:border-gray-600">
+        <div class="overflow-x-auto">
+            <table class="min-w-full table-auto border-collapse border border-gray-300 dark:border-gray-600">
             <thead>
                 <tr class="bg-gray-100 dark:bg-gray-700">
                     <th class="px-4 py-2 text-left text-gray-700 dark:text-gray-300 
@@ -24,6 +24,7 @@ border border-gray-300 dark:border-gray-600">Preço</th>
 border border-gray-300 dark:border-gray-600">Quantidade</th>
                     <th class="px-4 py-2 text-left text-gray-700 dark:text-gray-300
 border border-gray-300 dark:border-gray-600">Tipo</th>
+<th class="px-4 py-2 text-left text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 whitespace-nowrap">Fornecedor</th>
                     <th class="px-4 py-2 text-left text-gray-700 dark:text-gray-300
 border border-gray-300 dark:border-gray-600">Ações</th>
                 </tr>
@@ -35,7 +36,7 @@ border border-gray-300 dark:border-gray-600">Ações</th>
                         @if($product->image)
                         <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-16 h-16 object-cover rounded">
                         @else
-                        <div class="w-12 h-12 bg-gray-200 dark:bg-gray-600 flex items-center justify-center rounded">
+                        <div class="w-15 h-15 bg-gray-200 dark:bg-gray-600 flex items-center justify-center rounded">
                             <span class="text-gray-500 dark:text-gray-400">Sem imagem</span>
                         </div>
                         @endif
@@ -48,8 +49,11 @@ $product->price }}</td>
                     <td class="px-4 py-2 text-gray-900 dark:text-white">{{
 $product->quantity }}</td>
                     <td class="px-4 py-2 text-gray-900 dark:text-white">{{
-$product->type->name }}</td>
+optional($product->type)->name ?? 'Sem tipo' }}</td>
+                    <td class="px-4 py-2 text-gray-900 dark:text-white whitespace-nowrap">{{
+optional($product->supplier)->name ?? 'Sem fornecedor' }}</td>
                     <td class="px-4 py-2">
+
                         <div class="flex justify-center space-x-2">
                             <a href="{{ url('/products/update', ['id' => $product->id])
 }}" class="bg-gray-600 text-white px-3 py-1 rounded
@@ -62,7 +66,8 @@ hover:bg-red-700">Excluir</a>
                 </tr>
                 @endforeach
             </tbody>
-        </table>
+            </table>
+        </div>
 
     </div>
 

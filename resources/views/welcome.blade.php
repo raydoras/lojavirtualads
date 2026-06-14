@@ -75,7 +75,7 @@
                     </div>
 
                 </div>
-            @forelse
+            @empty
                 <div class="col-span-full text-center py-12 text-gray-500 bg-white rounded-lg border border-dashed border-gray-300">
                     Nenhum produto encontrado para os critérios selecionados.
                 </div>

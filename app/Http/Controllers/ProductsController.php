@@ -4,19 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Type;
+use App\Models\Supplier; 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductsController extends Controller
-
-      // função que irá mostrar a view de cadastro
-{   
-   public function create()
+{
+    public function create()
     {
-        return view('products.create', ['types' => Type::all()]);
+        return view('products.create', [
+            'types' => Type::all(),
+            'suppliers' => Supplier::all() 
+        ]);
     }
 
-    // função chamada no submit do form..
-    // será um POST com os dados
+
     public function store(Request $request)
     {
         // alimenta a var $errors na view
@@ -25,78 +27,94 @@ class ProductsController extends Controller
             'quantity' => 'required|gt:0',
             'price' => 'required|gt:0',
             'type_id' => 'required|exists:types,id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048' // Validação para aceitar imagens de até 2MB
+            'supplier_id' => 'nullable|exists:suppliers,id', 
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048' 
         ]);
 
-        // Cria o array básico com os dados do texto
         $productData = [
             'name' => $request->name,
             'description' => $request->description,
             'quantity' => $request->quantity,
             'price' => $request->price,
             'type_id' => $request->type_id,
-            'image' => null // Padrão começa nulo se não enviarem foto
+            'supplier_id' => $request->supplier_id, 
+            'image' => null 
         ];
 
-        // Se o usuário submeteu um arquivo de imagem válido
         if ($request->hasFile('image')) {
-            // Salva o arquivo dentro de 'storage/app/public/products' e retorna o caminho gerado
+
             $path = $request->file('image')->store('products', 'public');
             $productData['image'] = $path;
         }
 
-        // não esquecer import do Product model.
         Product::create($productData);
         
-        // usaremos flash session messages
         return redirect('/products')->with('success', 'Produto cadastrado com sucesso!');
     }
 
-    //função que irá mostrar a view de listagem
-    //passando como parâmetro a consulta no banco com ::all()
     public function index()
     {
         return view('products.index', [
-            'products' => Product::all()
+            'products' => Product::with(['type', 'supplier'])->get()
         ]);
     }
 
     public function edit($id)
     {
-        //find é o método que faz select * from products where id= ?
         $product = Product::find($id);
-        //retornamos a view passando a TUPLA de produto consultado
-        return view('products.edit', ['product' => $product, 'types' => Type::all()]);
+
+        return view('products.edit', [
+            'product' => $product, 
+            'types' => Type::all(),
+            'suppliers' => Supplier::all() 
+        ]);
     }
+
     public function update(Request $request)
     {
         $request->validate([
             'name' => 'required|min:2|max:50',
             'quantity' => 'required|gt:0',
             'price' => 'required|gt:0',
-            'type_id' => 'required|exists:types,id'
+            'type_id' => 'required|exists:types,id',
+            'supplier_id' => 'nullable|exists:suppliers,id', 
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048' 
         ]);
 
         $product = Product::find($request->id);
-        //método update faz um update product set name = ? etc...
-        $product->update([
+
+        $updateData = [
             'name' => $request->name,
             'description' => $request->description,
             'quantity' => $request->quantity,
             'price' => $request->price,
-            'type_id' => $request->type_id
-        ]);
-        return redirect('/products')->with('success', 'Produto atualizado
-com sucesso!');
+            'type_id' => $request->type_id,
+            'supplier_id' => $request->supplier_id 
+        ];
+
+        if ($request->hasFile('image')) {
+            if ($product->image) {
+                Storage::disk('public')->delete($product->image);
+            }
+            $path = $request->file('image')->store('products', 'public');
+            $updateData['image'] = $path;
+        } elseif ($request->has('remove_image') && $request->remove_image) {
+            if ($product->image) {
+                Storage::disk('public')->delete($product->image);
+            }
+            $updateData['image'] = null;
+        }
+
+        $product->update($updateData);
+
+        return redirect('/products')->with('success', 'Produto atualizado com sucesso!');
     }
 
     public function destroy($id)
     {
-        //select * from product where id = ?
         $product = Product::find($id);
-        //deleta o produto no banco
+
         $product->delete();
-        return redirect('/products')->with('success', 'Produto
-excluído com sucesso!');
+        return redirect('/products')->with('success', 'Produto excluído com sucesso!');
     }
 }
