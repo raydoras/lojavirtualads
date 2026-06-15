@@ -10,6 +10,12 @@ rounded hover:bg-blue-700">Cadastrar</a>
 
         </div>
 
+        @if(session('success'))
+            <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)" x-transition class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                {{ session('success') }}
+            </div>
+        @endif
+
         <div class="overflow-x-auto">
             <table class="min-w-full table-auto border-collapse border border-gray-300 dark:border-gray-600">
             <thead>

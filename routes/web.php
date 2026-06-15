@@ -29,8 +29,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/suppliers', [SupplierController::class, 'index'])->name('suppliers.index');
     Route::get('/suppliers/new', [SupplierController::class, 'create'])->name('suppliers.create');
-    
     Route::post('/suppliers/new', [SupplierController::class, 'store'])->name('suppliers.store');
+
+    Route::get('/suppliers/update/{supplier}', [SupplierController::class, 'edit'])->name('suppliers.edit');
+    Route::post('/suppliers/update/{supplier}', [SupplierController::class, 'update'])->name('suppliers.update');
+    Route::get('/suppliers/delete/{supplier}', [SupplierController::class, 'destroy'])->name('suppliers.destroy');
 
 });
 
